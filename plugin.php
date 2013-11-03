@@ -170,12 +170,15 @@ class WordPress_Video_SEO_Plugin {
 					if ( isset( $youtube_data['description'] ) )
 						$video['description'] = htmlspecialchars($youtube_data['description']);
 
-					$author_id = $post->post_author;
+					if ( isset( $youtube_data['author'] ) ) {
+						$video['author'] = $youtube_data['author'];
+					} else {
+						$author_id = $post->post_author;
 
-					$author_name = get_the_author_meta( 'first_name', $author_id ) . ' ' . get_the_author_meta( 'last_name', $author_id );
+						$author_name = get_the_author_meta( 'first_name', $author_id ) . ' ' . get_the_author_meta( 'last_name', $author_id );
 
-					$video['author'] = $author_name;
-
+						$video['author'] = $author_name;
+					}
 					$videos[] = $video;
 				}
 
@@ -211,13 +214,14 @@ class WordPress_Video_SEO_Plugin {
 
 		$description = $data->{'entry'}->{'media$group'}->{'media$description'}->{'$t'};
 
-
+		$author = $data->{'entry'}->{'author'}[0]->{'name'}->{'$t'};
 		return array(
 				'duration' => $duration,
 				'ratings' => $ratings,
 				'view_count' => $view_count,
 				'title' => $title,
-				'description' => $description
+				'description' => $description,
+				'author' => $author
 			);
 	}
 }
